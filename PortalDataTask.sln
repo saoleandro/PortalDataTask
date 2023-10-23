@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTaskApi", "PortalDataTaskApi\PortalDataTaskApi.csproj", "{C55477CA-1D4C-406B-9061-16BAB3EE1C1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Services", "1 - Services", "{93C531CC-0DA0-4E5C-9843-FEB171A65CFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{11502559-25A0-46C7-847E-8D1F6066A237}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Domain", "3 - Domain", "{60A22955-BF6D-49C8-91B5-486E20429412}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infra", "4 - Infra", "{A8FF460D-91F1-4E8D-859E-E4EF3F7B6A76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{01E739D9-4738-40A6-B115-A0C519B56E97}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTask.Application", "PortalDataTask.Application\PortalDataTask.Application.csproj", "{88C4D4CB-EC25-416B-B070-AC8425125503}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTask.Domain", "PortalDataTask.Domain\PortalDataTask.Domain.csproj", "{54120913-4974-4AED-828D-B1861956D1D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 - Data", "4.1 - Data", "{B16788D5-0476-4BAB-BE0C-7C1089F0F24E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.2 - CrossCutting", "4.2 - CrossCutting", "{A6E87FE7-AD04-44A3-9E59-2B3602878A6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTask.Infra.Data", "PortalDataTask.Infra.Data\PortalDataTask.Infra.Data.csproj", "{B0E3E5FC-7527-47A6-B33A-7D8C570F45AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTask.Infra.CrossCutting.IoC", "PortalDataTask.Infra.CrossCutting.IoC\PortalDataTask.Infra.CrossCutting.IoC.csproj", "{AB0481FB-DA94-4BB4-8FE8-E2FAA21E46FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTask.Tests.UnitTests", "PortalDataTask.Tests.UnitTests\PortalDataTask.Tests.UnitTests.csproj", "{D44E35E2-B3FF-47C2-A7B7-DB296AADC81D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTask.Infra.CrossCutting.Services", "PortalDataTask.Infra.CrossCutting.Services\PortalDataTask.Infra.CrossCutting.Services.csproj", "{C45555AC-3F90-4270-8015-9CF4D5962FC4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C55477CA-1D4C-406B-9061-16BAB3EE1C1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C55477CA-1D4C-406B-9061-16BAB3EE1C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C55477CA-1D4C-406B-9061-16BAB3EE1C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C55477CA-1D4C-406B-9061-16BAB3EE1C1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88C4D4CB-EC25-416B-B070-AC8425125503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88C4D4CB-EC25-416B-B070-AC8425125503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88C4D4CB-EC25-416B-B070-AC8425125503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88C4D4CB-EC25-416B-B070-AC8425125503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54120913-4974-4AED-828D-B1861956D1D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54120913-4974-4AED-828D-B1861956D1D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54120913-4974-4AED-828D-B1861956D1D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54120913-4974-4AED-828D-B1861956D1D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0E3E5FC-7527-47A6-B33A-7D8C570F45AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0E3E5FC-7527-47A6-B33A-7D8C570F45AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0E3E5FC-7527-47A6-B33A-7D8C570F45AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0E3E5FC-7527-47A6-B33A-7D8C570F45AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB0481FB-DA94-4BB4-8FE8-E2FAA21E46FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB0481FB-DA94-4BB4-8FE8-E2FAA21E46FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB0481FB-DA94-4BB4-8FE8-E2FAA21E46FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB0481FB-DA94-4BB4-8FE8-E2FAA21E46FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D44E35E2-B3FF-47C2-A7B7-DB296AADC81D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D44E35E2-B3FF-47C2-A7B7-DB296AADC81D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D44E35E2-B3FF-47C2-A7B7-DB296AADC81D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D44E35E2-B3FF-47C2-A7B7-DB296AADC81D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C45555AC-3F90-4270-8015-9CF4D5962FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45555AC-3F90-4270-8015-9CF4D5962FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C45555AC-3F90-4270-8015-9CF4D5962FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C45555AC-3F90-4270-8015-9CF4D5962FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C55477CA-1D4C-406B-9061-16BAB3EE1C1D} = {93C531CC-0DA0-4E5C-9843-FEB171A65CFD}
+		{88C4D4CB-EC25-416B-B070-AC8425125503} = {11502559-25A0-46C7-847E-8D1F6066A237}
+		{54120913-4974-4AED-828D-B1861956D1D0} = {60A22955-BF6D-49C8-91B5-486E20429412}
+		{B16788D5-0476-4BAB-BE0C-7C1089F0F24E} = {A8FF460D-91F1-4E8D-859E-E4EF3F7B6A76}
+		{A6E87FE7-AD04-44A3-9E59-2B3602878A6C} = {A8FF460D-91F1-4E8D-859E-E4EF3F7B6A76}
+		{B0E3E5FC-7527-47A6-B33A-7D8C570F45AE} = {B16788D5-0476-4BAB-BE0C-7C1089F0F24E}
+		{AB0481FB-DA94-4BB4-8FE8-E2FAA21E46FE} = {A6E87FE7-AD04-44A3-9E59-2B3602878A6C}
+		{D44E35E2-B3FF-47C2-A7B7-DB296AADC81D} = {01E739D9-4738-40A6-B115-A0C519B56E97}
+		{C45555AC-3F90-4270-8015-9CF4D5962FC4} = {A6E87FE7-AD04-44A3-9E59-2B3602878A6C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A367080-62BC-4489-ABDE-1BCDCDC48572}
+	EndGlobalSection
+EndGlobal

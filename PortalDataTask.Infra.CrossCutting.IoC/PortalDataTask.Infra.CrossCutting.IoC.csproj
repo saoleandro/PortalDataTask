@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PortalDataTask.Application\PortalDataTask.Application.csproj" />
+    <ProjectReference Include="..\PortalDataTask.Infra.CrossCutting.Services\PortalDataTask.Infra.CrossCutting.Services.csproj" />
+    <ProjectReference Include="..\PortalDataTask.Infra.Data\PortalDataTask.Infra.Data.csproj" />
+  </ItemGroup>
+
+</Project>
