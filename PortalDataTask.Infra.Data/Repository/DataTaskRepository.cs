@@ -20,7 +20,6 @@ public class DataTaskRepository : IDataTaskRepository
         _contextDb.Dispose();
     }
 
-
     public async Task<List<DataTask>> GetAllAsync()
     {
         return await _contextDb.DataTasks!.ToListAsync();
@@ -53,6 +52,12 @@ public class DataTaskRepository : IDataTaskRepository
                     (validateDate.HasValue && (f.ValidateDate >= validateDate && f.ValidateDate <= finalDate)) ||
                     (status.HasValue && (f.Status == status)))
                     .ToListAsync();
+    }
+
+    public async Task Delete(DataTask dataTask)
+    {
+        _contextDb.Remove<DataTask>(dataTask);
+        await _contextDb.SaveChangesAsync();
     }
 
     public async Task CreateAsync(DataTask dataTask)

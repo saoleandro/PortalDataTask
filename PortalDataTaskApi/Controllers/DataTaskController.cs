@@ -47,7 +47,7 @@ public class DataTaskController : BaseController
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(CreateDataTaskRequest), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CreateDataTaskResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ErrorResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GeneralErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateDataTaskAsync([FromBody] CreateDataTaskRequest createDataTaskRequest)
@@ -57,7 +57,7 @@ public class DataTaskController : BaseController
     }
 
     [HttpPut("{dataTaskId}")]
-    [ProducesResponseType(typeof(CreateDataTaskRequest), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UpdateDataTaskResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ErrorResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GeneralErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateDataTaskAsync([FromRoute] long dataTaskId , [FromBody] UpdateDataTaskRequest updateDataTaskRequest)
@@ -65,4 +65,15 @@ public class DataTaskController : BaseController
         var response = await _dataTaskService.UpdateDataTaskAsync(dataTaskId, updateDataTaskRequest);
         return Response(response);
     }
+
+    [HttpDelete("{dataTaskId}")]
+    [ProducesResponseType(typeof(CreateDataTaskRequest), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ErrorResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GeneralErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteDataTaskAsync([FromRoute] long dataTaskId)
+    {
+        var response = await _dataTaskService.DeleteDataTaskAsync(dataTaskId);
+        return Response(response);
+    }
+
 }

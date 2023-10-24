@@ -7,6 +7,7 @@ namespace PortalDataTask.Infra.Data;
 public class ContextDb : DbContext
 {
     public DbSet<Domain.Entities.DataTask>? DataTasks { get; set; }
+    public DbSet<Domain.Entities.User>? Users { get; set; }
 
 	public ContextDb(DbContextOptions<ContextDb> options) : base(options)
 	{

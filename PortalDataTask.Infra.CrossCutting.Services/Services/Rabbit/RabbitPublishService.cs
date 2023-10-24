@@ -21,36 +21,47 @@ public class RabbitPublishService : IRabbitPublishService
 
     public Task SendMessage(MessageSendModel messageSendModel, bool fromRec = false)
     {
-        using(var connection = CreateConnection()) 
+        try
         {
-            using(var channel = connection.CreateModel())
+
+            using (var connection = CreateConnection())
             {
-                if (!fromRec)
+                using (var channel = connection.CreateModel())
                 {
-                    var properties = channel.CreateBasicProperties();
-                    properties.Persistent = true;
+                    if (!fromRec)
+                    {
+                        var properties = channel.CreateBasicProperties();
+                        properties.Persistent = true;
 
-                    channel.ExchangeDeclare(_rabbitSendOptions.Exchange, ExchangeType.Topic, true);
+                        channel.ExchangeDeclare(_rabbitSendOptions.Exchange, ExchangeType.Topic, true);
 
-                    channel.BasicPublish(_rabbitSendOptions.Exchange, _rabbitSendOptions.RoutingKey, properties, messageSendModel.Body);
+                        channel.BasicPublish(_rabbitSendOptions.Exchange, _rabbitSendOptions.RoutingKey, properties, messageSendModel.Body);
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"Declarando exchange {_rabbitSendOptions.Exchange}");
+
+                        channel.ExchangeDeclare(_rabbitSendOptions.Exchange, ExchangeType.Topic, true, false, new Dictionary<string, object>());
+
+                        var properties = channel.CreateBasicProperties();
+                        properties.Persistent = true;
+
+                        channel.BasicPublish(_rabbitSendOptions.Exchange, _rabbitSendOptions.RoutingKey, properties, messageSendModel.Body);
+                    }
+
+                    _logger.LogInformation($"Enviando para o exchange {_rabbitSendOptions.Exchange}");
                 }
-                else
-                {
-                    _logger.LogInformation($"Declarando exchange {_rabbitSendOptions.Exchange}");
-
-                    channel.ExchangeDeclare(_rabbitSendOptions.Exchange, ExchangeType.Topic, true, false, new Dictionary<string, object>());
-
-                    var properties = channel.CreateBasicProperties();
-                    properties.Persistent = true;
-
-                    channel.BasicPublish(_rabbitSendOptions.Exchange, _rabbitSendOptions.RoutingKey, properties, messageSendModel.Body);
-                }
-
-                _logger.LogInformation($"Enviando para o exchange {_rabbitSendOptions.Exchange}");
             }
-        }
 
-        return Task.CompletedTask;
+            return Task.CompletedTask;
+        }
+        catch(Exception ex)
+        {
+            var error = $"Erro de conectar/enviar mensagem na fila do RabbitMQ. Favor verificar se o Portal Worker está rodando.";
+
+            _logger.LogError(ex,"{Class} | {Method} | {Error} | Message: {Message} | StackTrace: {StackTrace} ", nameof(RabbitPublishService), nameof(SendMessage), error, ex.Message, ex?.StackTrace);
+            throw new Exception(error);
+        }
     }
 
     private static IConnection CreateConnection()

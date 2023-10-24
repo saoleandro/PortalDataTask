@@ -11,4 +11,5 @@ public interface IDataTaskRepository
     Task<List<DataTask>> GetByFilters(string description, DateTime? validateDate, DateTime? finalDate, StatusEnum? status);
     Task CreateAsync(Entities.DataTask dataTask);
     Task UpdateAsync(Entities.DataTask dataTask);
+    Task Delete(DataTask dataTask);
 }

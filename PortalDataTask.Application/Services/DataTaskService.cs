@@ -40,7 +40,7 @@ public class DataTaskService : IDataTaskService
 
         if (dataTasks == null)
         {
-            _logger.LogWarning(@"{Class} | {Method} | Data Task não encontrado", nameof(DataTaskService), nameof(GetAllDataTask));
+            _logger.LogWarning(@"{Class} | {Method} | Tarefa não encontrado", nameof(DataTaskService), nameof(GetAllDataTask));
 
             response.AddError(new ErrorResponse
             {
@@ -51,7 +51,7 @@ public class DataTaskService : IDataTaskService
         }
 
         response.AddData(MappertToGetAllResponse(dataTasks));
-        
+
         _logger.LogInformation(@"{Class} | {Method} | Finalizando | Id: {id}", nameof(DataTaskService), nameof(GetAllDataTask));
 
         return response;
@@ -65,9 +65,9 @@ public class DataTaskService : IDataTaskService
 
         var dataTask = await _dataTaskRepository.GetByIdAsync(id);
 
-        if(dataTask == null)
+        if (dataTask == null)
         {
-            _logger.LogWarning(@"{Class} | {Method} | Data Task não encontrado | Id: {id}", nameof(DataTaskService), nameof(GetDataTaskById), id);
+            _logger.LogWarning(@"{Class} | {Method} | Tarefa não encontrado | Id: {id}", nameof(DataTaskService), nameof(GetDataTaskById), id);
 
             response.AddError(new ErrorResponse
             {
@@ -80,16 +80,16 @@ public class DataTaskService : IDataTaskService
         response.AddData(new GetDataTaskResponse
         {
             Id = dataTask.Id,
-            Description =dataTask.Description,
-            ValidateDate= dataTask.ValidateDate,
-            Status= dataTask.Status,
+            Description = dataTask.Description,
+            ValidateDate = dataTask.ValidateDate,
+            Status = dataTask.Status,
             CreatedAt = dataTask.CreatedAt,
             UpdatedAt = dataTask.UpdatedAt
         });
 
         _logger.LogInformation(@"{Class} | {Method} | Finalizando | Id: {id}", nameof(DataTaskService), nameof(GetDataTaskById), id);
 
-        return response;        
+        return response;
     }
 
     public async Task<BaseResponse> GetByFilters(GetDataTasksByFiltersRequest request)
@@ -129,62 +129,74 @@ public class DataTaskService : IDataTaskService
     {
         var response = new BaseResponse();
 
-        _logger.LogInformation(@"{Class} | {Method} | Iniciando", nameof(DataTaskService), nameof(CreateDataTaskAsync));
-
-        var validationResult = await new CreateDataTaskValidator().ValidateAsync(createDataTaskRequest);
-
-        if (!validationResult.IsValid)
+        try
         {
-            _logger.LogWarning(@"{Class} | {Method} | Request Invalido | Erros: {@errors}", nameof(DataTaskService), nameof(CreateDataTaskAsync), validationResult.Errors);
 
-            foreach(var error in validationResult.Errors)
+            _logger.LogInformation(@"{Class} | {Method} | Iniciando", nameof(DataTaskService), nameof(CreateDataTaskAsync));
+
+            var validationResult = await new CreateDataTaskValidator().ValidateAsync(createDataTaskRequest);
+
+            if (!validationResult.IsValid)
             {
-                response.AddError(new ErrorResponse()
+                _logger.LogWarning(@"{Class} | {Method} | Request Invalido | Erros: {@errors}", nameof(DataTaskService), nameof(CreateDataTaskAsync), validationResult.Errors);
+
+                foreach (var error in validationResult.Errors)
                 {
-                    Message = error.ErrorMessage
-                }, System.Net.HttpStatusCode.BadRequest);
+                    response.AddError(new ErrorResponse()
+                    {
+                        Message = error.ErrorMessage
+                    }, System.Net.HttpStatusCode.BadRequest);
+                }
+
+                return response;
             }
 
-            return response;
-        }
+            var existsDataTask = await _dataTaskRepository.GetByDescriptionAsync(createDataTaskRequest?.Description);
 
-        var existsDataTask = await _dataTaskRepository.GetByDescriptionAsync(createDataTaskRequest?.Description);
-
-        if (existsDataTask != null)
-        {
-            _logger.LogWarning(@"{Class} | {Method} | Existe o data Task com a descrição: {description}", nameof(DataTaskService), nameof(CreateDataTaskAsync), createDataTaskRequest.Description);
-
-            response.AddError(new ErrorResponse()
+            if (existsDataTask != null)
             {
-                Message = Resources.AppMessage.Validation_AlreadyDescription
-            }, System.Net.HttpStatusCode.BadRequest);
+                _logger.LogWarning(@"{Class} | {Method} | Existe a tarefa com a descrição: {description}", nameof(DataTaskService), nameof(CreateDataTaskAsync), createDataTaskRequest.Description);
 
-            return response;
+                response.AddError(new ErrorResponse()
+                {
+                    Message = Resources.AppMessage.Validation_AlreadyDescription
+                }, System.Net.HttpStatusCode.BadRequest);
+
+                return response;
+            }
+
+            var dataTask = new Domain.Entities.DataTask(
+                0,
+                createDataTaskRequest.Description,
+                createDataTaskRequest.ValidateDate.Value,
+                createDataTaskRequest.Status.Value,
+                DateTime.Now,
+                null);
+
+            //await _dataTaskRepository.CreateAsync(dataTask);
+
+            var messagePublish = new MessageSendModel
+            {
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dataTask))
+            };
+
+            await _rabbitPublishService.SendMessage(messagePublish, true);
+
+            response.AddData(new CreateDataTaskResponse()
+            {
+                Id = dataTask.Id
+            });
+
+            _logger.LogInformation(@"{Class} | {Method} | Finalizando | Id: {id}", nameof(DataTaskService), nameof(CreateDataTaskAsync), dataTask.Id);
+
         }
-
-        var dataTask = new Domain.Entities.DataTask(
-            0,
-            createDataTaskRequest.Description,
-            createDataTaskRequest.ValidateDate.Value,
-            createDataTaskRequest.Status.Value,
-            DateTime.Now,
-            null);
-
-        //await _dataTaskRepository.CreateAsync(dataTask);
-
-        var messagePublish = new MessageSendModel
+        catch (Exception ex)
         {
-            Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dataTask))
-        };
-
-        await _rabbitPublishService.SendMessage(messagePublish, true);
-
-        response.AddData(new CreateDataTaskResponse()
-        {
-            Id = dataTask.Id
-        });
-
-        _logger.LogInformation(@"{Class} | {Method} | Finalizando | Id: {id}", nameof(DataTaskService), nameof(CreateDataTaskAsync), dataTask.Id);
+            response.AddError(new ErrorResponse
+            {
+                Message = ex.Message
+            }, System.Net.HttpStatusCode.BadRequest);
+        }
 
         return response;
 
@@ -194,88 +206,145 @@ public class DataTaskService : IDataTaskService
     {
         var response = new BaseResponse();
 
-        _logger.LogInformation(@"{Class} | {Method} | Iniciando", nameof(DataTaskService), nameof(UpdateDataTaskAsync));
-
-        var validationResult = await new UpdateDataTaskValidator().ValidateAsync(updateDataTaskRequest, 
-            _ => {
-                ValidatorOptions.Global.LanguageManager.Enabled = false; }
-            );
-
-        if (!validationResult.IsValid)
+        try
         {
-            _logger.LogWarning(@"{Class} | {Method} | Request Invalido | Erros: {@errors}", nameof(DataTaskService), nameof(UpdateDataTaskAsync), validationResult.Errors);
 
-            foreach (var error in validationResult.Errors)
+            _logger.LogInformation(@"{Class} | {Method} | Iniciando", nameof(DataTaskService), nameof(UpdateDataTaskAsync));
+
+            var validationResult = await new UpdateDataTaskValidator().ValidateAsync(updateDataTaskRequest,
+                _ =>
+                {
+                    ValidatorOptions.Global.LanguageManager.Enabled = false;
+                }
+                );
+
+            if (!validationResult.IsValid)
+            {
+                _logger.LogWarning(@"{Class} | {Method} | Request Invalido | Erros: {@errors}", nameof(DataTaskService), nameof(UpdateDataTaskAsync), validationResult.Errors);
+
+                foreach (var error in validationResult.Errors)
+                {
+                    response.AddError(new ErrorResponse()
+                    {
+                        Message = error.ErrorMessage
+                    }, System.Net.HttpStatusCode.BadRequest);
+                }
+
+                return response;
+            }
+
+            var existsDataTask = await _dataTaskRepository.GetByDescriptionAsync(updateDataTaskRequest?.Description);
+
+            if (existsDataTask != null && existsDataTask!.Id != id)
+            {
+                _logger.LogWarning(@"{Class} | {Method} | Já existe a tarefa para outro Id | id: {id} | descrição: {description}", nameof(DataTaskService), nameof(UpdateDataTaskAsync), existsDataTask.Id, existsDataTask.Description);
+
+                response.AddError(new ErrorResponse()
+                {
+                    Message = Resources.AppMessage.Validation_AlreadyDescriptionOtherId
+                }, System.Net.HttpStatusCode.BadRequest);
+
+                return response;
+            }
+
+            existsDataTask = await _dataTaskRepository.GetByIdAsync(id);
+
+            if (existsDataTask == null)
             {
                 response.AddError(new ErrorResponse()
                 {
-                    Message = error.ErrorMessage
+                    Message = Resources.AppMessage.Validation_DataTaskNotFoundById
                 }, System.Net.HttpStatusCode.BadRequest);
+
+                return response;
             }
 
-            return response;
-        }
+            var updateDataTask = new Domain.Entities.DataTask(
+                existsDataTask.Id,
+                updateDataTaskRequest.Description,
+                updateDataTaskRequest.ValidateDate.HasValue ?
+                    updateDataTaskRequest.ValidateDate.Value :
+                    existsDataTask.ValidateDate,
+                updateDataTaskRequest.Status.HasValue ?
+                    updateDataTaskRequest.Status.Value :
+                    existsDataTask.Status,
+                existsDataTask.CreatedAt,
+                DateTime.Now);
 
-        var existsDataTask = await _dataTaskRepository.GetByDescriptionAsync(updateDataTaskRequest?.Description);
 
-        if (existsDataTask != null && existsDataTask!.Id != id)
-        {
-            _logger.LogWarning(@"{Class} | {Method} | Já existe o data Task para outro Id | id: {id} | descrição: {description}", nameof(DataTaskService), nameof(UpdateDataTaskAsync), existsDataTask.Id, existsDataTask.Description);
-
-            response.AddError(new ErrorResponse()
+            var messagePublish = new MessageSendModel
             {
-                Message = Resources.AppMessage.Validation_AlreadyDescriptionOtherId
-            }, System.Net.HttpStatusCode.BadRequest);
+                Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updateDataTask))
+            };
 
-            return response;
-        }
+            await _rabbitPublishService.SendMessage(messagePublish, true);
 
-        existsDataTask = await _dataTaskRepository.GetByIdAsync(id);
+            //await _dataTaskRepository.UpdateAsync(dataTask);
 
-        if(existsDataTask == null)
-        {
-            response.AddError(new ErrorResponse()
+            response.AddData(new UpdateDataTaskResponse()
             {
-                Message = Resources.AppMessage.Validation_DataTaskNotFoundById
-            }, System.Net.HttpStatusCode.BadRequest);
+                Description = updateDataTask.Description,
+                ValidateDate = updateDataTask.ValidateDate,
+                Status = updateDataTask.Status,
+                CreatedAt = updateDataTask.CreatedAt,
+                UpdatedAt = updateDataTask.UpdatedAt
+            });
 
-            return response;
+            _logger.LogInformation(@"{Class} | {Method} | Finalizando | Id: {id}", nameof(DataTaskService), nameof(UpdateDataTaskAsync), updateDataTask.Id);
+
         }
-
-        var updateDataTask = new Domain.Entities.DataTask(
-            existsDataTask.Id,
-            updateDataTaskRequest.Description,
-            updateDataTaskRequest.ValidateDate.HasValue ?
-                updateDataTaskRequest.ValidateDate.Value :
-                existsDataTask.ValidateDate,
-            updateDataTaskRequest.Status.HasValue ?
-                updateDataTaskRequest.Status.Value :
-                existsDataTask.Status,
-            existsDataTask.CreatedAt,
-            DateTime.Now);
-
-        
-        var messagePublish = new MessageSendModel
+        catch (Exception ex)
         {
-            Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updateDataTask))
-        };
-
-        await _rabbitPublishService.SendMessage(messagePublish, true);
-
-        //await _dataTaskRepository.UpdateAsync(dataTask);
-
-        response.AddData(new UpdateDataTaskResponse()
-        {
-            Description = updateDataTask.Description,
-            ValidateDate= updateDataTask.ValidateDate,
-            Status = updateDataTask.Status,
-            CreatedAt = updateDataTask.CreatedAt,
-            UpdatedAt = updateDataTask.UpdatedAt
-        });
-
-        _logger.LogInformation(@"{Class} | {Method} | Finalizando | Id: {id}", nameof(DataTaskService), nameof(UpdateDataTaskAsync), updateDataTask.Id);
+            response.AddError(new ErrorResponse
+            {
+                Message = ex.Message
+            }, System.Net.HttpStatusCode.BadRequest);
+        }
 
         return response;
+    }
+
+    public async Task<BaseResponse> DeleteDataTaskAsync(long id)
+    {
+        var response = new BaseResponse();
+
+        try
+        {
+            _logger.LogInformation(@"{Class} | {Method} | Iniciando", nameof(DataTaskService), nameof(UpdateDataTaskAsync));
+
+            var dataTask = await _dataTaskRepository.GetByIdAsync(id);
+
+            if (dataTask == null)
+            {
+                _logger.LogWarning(@"{Class} | {Method} | Tarefa não encontrado | Id: {id}", nameof(DataTaskService), nameof(DeleteDataTaskAsync), id);
+
+                response.AddError(new ErrorResponse
+                {
+                    Message = Resources.AppMessage.Validation_DataTaskNotFoundById
+                }, System.Net.HttpStatusCode.BadRequest);
+
+                return response;
+            }
+
+            await _dataTaskRepository.Delete(dataTask);
+
+            _logger.LogWarning(@"{Class} | {Method} | Tarefa removido com sucesso | Id: {id}", nameof(DataTaskService), nameof(DeleteDataTaskAsync), id);
+
+            response.AddData(new DeleteDataTaskResponse
+            {
+                Id = id
+            });
+        }
+        catch (Exception ex)
+        {
+            response.AddError(new ErrorResponse
+            {
+                Message = $"Ocorreu um erro o tentar excluir a tarefa. Detalhes: {ex.Message}"
+            }, System.Net.HttpStatusCode.BadRequest);
+        }
+
+        return response;
+
     }
 
     private List<GetDataTasksByFiltersResponse> MappertToFiltersResponse(List<Domain.Entities.DataTask> dataTasks)

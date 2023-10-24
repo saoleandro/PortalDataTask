@@ -9,4 +9,5 @@ public interface IDataTaskService
     Task<BaseResponse> GetByFilters(GetDataTasksByFiltersRequest request);
     Task<BaseResponse> CreateDataTaskAsync(CreateDataTaskRequest createDataTaskRequest);
     Task<BaseResponse> UpdateDataTaskAsync(long id, UpdateDataTaskRequest updateDataTaskRequest);
+    Task<BaseResponse> DeleteDataTaskAsync(long id);
 }

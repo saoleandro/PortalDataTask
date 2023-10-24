@@ -15,11 +15,13 @@ public static class RegisterDependencies
         //Services
         servicesCollection.AddScoped<IDataTaskService, DataTaskService>();
         servicesCollection.AddScoped<ICategoryService, CategoryService>();
+        servicesCollection.AddScoped<IAuthenticationService, AuthenticationService>();
         servicesCollection.AddScoped<IRabbitPublishService, RabbitPublishService>();
 
         //Repository
         servicesCollection.AddScoped<IDataTaskRepository, DataTaskRepository>();
-        
+        servicesCollection.AddScoped<IUserRepository, UserRepository>();
+
         //Options
         servicesCollection.Configure<RabbitSendOptions>(configuration.GetSection("RabbitMQ"));
     }
