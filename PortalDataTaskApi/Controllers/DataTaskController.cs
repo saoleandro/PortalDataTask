@@ -67,7 +67,7 @@ public class DataTaskController : BaseController
     }
 
     [HttpDelete("{dataTaskId}")]
-    [ProducesResponseType(typeof(CreateDataTaskRequest), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(long), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(List<ErrorResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GeneralErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteDataTaskAsync([FromRoute] long dataTaskId)

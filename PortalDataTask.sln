@@ -27,6 +27,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTask.Infra.CrossC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalDataTask.Infra.CrossCutting.Services", "PortalDataTask.Infra.CrossCutting.Services\PortalDataTask.Infra.CrossCutting.Services.csproj", "{C45555AC-3F90-4270-8015-9CF4D5962FC4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{FDF5B656-C766-4FFE-85C0-6813E7D597E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortalDataTask.Tests.UnitTests", "PortalDataTask.Tests.UnitTests\PortalDataTask.Tests.UnitTests.csproj", "{AF256AA9-6F4C-4DFF-AB94-6D93DE8AA899}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{C45555AC-3F90-4270-8015-9CF4D5962FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C45555AC-3F90-4270-8015-9CF4D5962FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C45555AC-3F90-4270-8015-9CF4D5962FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF256AA9-6F4C-4DFF-AB94-6D93DE8AA899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF256AA9-6F4C-4DFF-AB94-6D93DE8AA899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF256AA9-6F4C-4DFF-AB94-6D93DE8AA899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF256AA9-6F4C-4DFF-AB94-6D93DE8AA899}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +78,7 @@ Global
 		{B0E3E5FC-7527-47A6-B33A-7D8C570F45AE} = {B16788D5-0476-4BAB-BE0C-7C1089F0F24E}
 		{AB0481FB-DA94-4BB4-8FE8-E2FAA21E46FE} = {A6E87FE7-AD04-44A3-9E59-2B3602878A6C}
 		{C45555AC-3F90-4270-8015-9CF4D5962FC4} = {A6E87FE7-AD04-44A3-9E59-2B3602878A6C}
+		{AF256AA9-6F4C-4DFF-AB94-6D93DE8AA899} = {FDF5B656-C766-4FFE-85C0-6813E7D597E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A367080-62BC-4489-ABDE-1BCDCDC48572}
